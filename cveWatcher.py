@@ -23,7 +23,6 @@ def get_cve(content, pattern):
 
 def get_published(content, pattern):
     """
-
     :rtype : List
     :param content: website text
     :param pattern: regex
@@ -36,7 +35,6 @@ def get_published(content, pattern):
 
 def get_cvss(content, pattern):
     """
-
     :rtype : List
     :param content: website text
     :param pattern: regex
@@ -73,7 +71,6 @@ def urlgrab2(host):
 
 def main():
     """
-
     :return: None
     """
 
