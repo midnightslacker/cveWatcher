@@ -1,3 +1,5 @@
+DEPRECATED -- UPDATE TO USE REQUESTS LIBRARY 
+
 CVE Watcher queries the National Vulnerability Database (NVD) for CVEs related to specific vendor and/or product
 
 
