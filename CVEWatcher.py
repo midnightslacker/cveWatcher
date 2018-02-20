@@ -4,16 +4,18 @@
 
 """
 
-import urllib2
+#import urllib2
+import requests
 import re
 import argparse
 import sys
 from bs4 import BeautifulSoup
 
 
-CVE_REGEX = re.compile(r"CVE-\d*-\d*\\\\r")
-CVSS_REGEX = re.compile(r"CVSS Severity: \d+.\d HIGH|MEDIUM_HIGH|MEDIUM|LOW")
-PUBLISHED_REGEX = re.compile(r"Published: \d+\/\d+\/\d+")
+CVSS_REGEX = re.compile(r"(V3: [0-9].[0-9])\s(CRITICAL|HIGH|MEDIUM|LOW)")
+CVE_REGEX = re.compile(r"(CVE-20[0-9]{2}-\d{4})\n")
+PUBLISHED_REGEX = re.compile(r"(January|February|March|April|May|June|July|August|Sepetember|October|November|Decemeber)(\s[0-9]{2}\, 20[0-9]{2})")
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
 
 
 def get_cve(content, pattern):
@@ -24,7 +26,7 @@ def get_cve(content, pattern):
     :return: CVE Numbers
     """
     vulnerability = re.findall(pattern, str(content))
-    vulnerability = [v.replace('\\r', '') for v in vulnerability]
+    #vulnerability = [v.replace('\\r', '') for v in vulnerability]
     return list(vulnerability)
 
 
@@ -36,7 +38,7 @@ def get_published(content, pattern):
     :return: Publish Dates of CVEs
     """
     pubdate = re.findall(pattern, str(content))
-    pubdate = [p.replace('Published: ', '') for p in pubdate]
+    #pubdate = [p.replace('Published: ', '') for p in pubdate]
     return list(pubdate)
 
 
@@ -48,7 +50,7 @@ def get_cvss(content, pattern):
     :return: CVSS Score
     """
     score = re.findall(pattern, str(content))
-    score = [s.replace('CVSS Severity: ', '') for s in score]
+    #score = [s.replace('CVSS Severity: ', '') for s in score]
     return list(score)
 
 
@@ -59,18 +61,15 @@ def urlgrab2(host):
     :param pattern: regex
     :return: Test for web page grab
     """
+    headers = {'User-Agent' : USER_AGENT}
 
-    try:
-        response = urllib2.urlopen(host)
-    except urllib2.URLError as error:
-        if hasattr(error, 'reason'):
-            print "\t [-] Failed to reach " + str(host) + "\n\t [-] Reason: ", error.reason + "\n"
-            sys.exit()
-        elif hasattr(error, 'code'):
-            print "\t [-] The server (%s) couldn't fulfill the requst.\n\t [-] Reason: %s" % (host, error.code)
-            sys.exit()
+    try:    
+        response = requests.get(host, headers=headers)  
+    except requests.exceptions.HTTPError as error:
+        print error
+        sys.exit(1)
 
-    cve_list = response.readlines()
+    cve_list = response.text
     soup = BeautifulSoup(str(cve_list))
     text_only = soup.getText().encode("utf-8")
     return text_only
@@ -124,8 +123,9 @@ def main():
     cvss_list = get_cvss(all_text, CVSS_REGEX)
     pub_list = get_published(all_text, PUBLISHED_REGEX)
 
+
     for element in range(len(cvss_list)):
-        print str(args.vendor) + "," + str(cve_list[element]) + "," + str(cvss_list[element]) + "," + str(pub_list[element])
+        print str(args.vendor) + "," + str(cvss_list[element]) + ',' + str(cve_list[element]) + "," + str(pub_list[element])
 
 
 if __name__ == "__main__":
