@@ -15,7 +15,6 @@ python CVEWatcher.py -v Google -p chrome -s 4 -S 2014 -e 11 -E 2014
 
 
 Example Output:
-python CVEWatcher.py -v Microsoft -s 0 -S 2018 -e 0 -E 2018
 
 Microsoft,7.8,HIGH,CVE-2017-3762,January  25  2018
 
