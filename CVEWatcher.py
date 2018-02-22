@@ -38,7 +38,7 @@ def get_published(content, pattern):
     :return: Publish Dates of CVEs
     """
     pubdate = re.findall(pattern, str(content))
-    #pubdate = [p.replace('Published: ', '') for p in pubdate]
+    #pubdate = [p.replace(',', ' ') for p in pubdate]
     return list(pubdate)
 
 
@@ -70,7 +70,7 @@ def urlgrab2(host):
         sys.exit(1)
 
     cve_list = response.text
-    soup = BeautifulSoup(str(cve_list))
+    soup = BeautifulSoup(str(cve_list), "lxml")
     text_only = soup.getText().encode("utf-8")
     return text_only
 
@@ -125,7 +125,7 @@ def main():
 
 
     for element in range(len(cvss_list)):
-        print str(args.vendor) + "," + str(cvss_list[element]) + ',' + str(cve_list[element]) + "," + str(pub_list[element])
+        print str(args.vendor) + "," + str(','.join(cvss_list[element]).replace("V3: ", "")) + ',' + str(cve_list[element]) + "," + str(' '.join(pub_list[element]).replace(","," "))
 
 
 if __name__ == "__main__":
