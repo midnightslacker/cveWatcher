@@ -1,7 +1,7 @@
 """
 [+] CVEWatcher module makes a web request to the National Vulnerability Database (NVD).
-[+} This web request can be configured to include vendor, product, CVSS score and a time line for when to search for vulnerabilities.
-
+[+] This web request can be configured to include vendor, product, CVSS score and a time line for when to search for vulnerabilities.
+[+] Output format is CSV
 """
 
 
