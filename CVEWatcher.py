@@ -4,7 +4,7 @@
 
 """
 
-#import urllib2
+
 import requests
 import re
 import argparse
@@ -26,7 +26,6 @@ def get_cve(content, pattern):
     :return: CVE Numbers
     """
     vulnerability = re.findall(pattern, str(content))
-    #vulnerability = [v.replace('\\r', '') for v in vulnerability]
     return list(vulnerability)
 
 
@@ -38,7 +37,6 @@ def get_published(content, pattern):
     :return: Publish Dates of CVEs
     """
     pubdate = re.findall(pattern, str(content))
-    #pubdate = [p.replace(',', ' ') for p in pubdate]
     return list(pubdate)
 
 
@@ -50,7 +48,6 @@ def get_cvss(content, pattern):
     :return: CVSS Score
     """
     score = re.findall(pattern, str(content))
-    #score = [s.replace('CVSS Severity: ', '') for s in score]
     return list(score)
 
 
